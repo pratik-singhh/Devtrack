@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import type { LoginRequest } from "../types";
 import { AttemptLogin } from "../api/auth";
 function Login() {
+  let navigator = useNavigate();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [credentials, setCredentials] = useState<LoginRequest>({
@@ -17,9 +19,10 @@ function Login() {
       setError(null);
       const response = await AttemptLogin(credentials);
       const token = response.token;
-      localStorage.setItem('token', JSON.stringify(token));
+      localStorage.setItem('token', (token));
 
       console.log(response);
+      navigator("/dashboard")
 
     }
     catch (error) {
@@ -31,6 +34,10 @@ function Login() {
       setLoading(false);
     }
   }
+
+
+
+
   return (
     <div>
 
