@@ -1,24 +1,24 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import type { Project } from "../types"
 import { projectAdd, projectDelete, projectEdit, projectFetch } from "../api/projects";
+import { useAuth } from "../hooks/useAuth";
+
 function Dashboard() {
+  const { authError, tokenVerify, logout } = useAuth();
   const [editingProjectId, setEditingProjectId] = useState<number | null>(null)
   const [editedName, setEditedName] = useState<string>("");
-  const navigator = useNavigate();
-
   console.log("Dashboard Opened");
 
   const [projects, setProjects] = useState<Project[]>([]);
 
   const [newProject, setNewProject] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
+
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      navigator("/");
-      return;
-    }
+    setLoading(true);
+
+    const token = tokenVerify();
     const tryFetch = async () => {
       try {
 
@@ -28,12 +28,12 @@ function Dashboard() {
 
       catch (error) {
         console.error(error);
+        authError();
 
-        localStorage.removeItem('token');
-        navigator("/");
-        return;
+      }
+      finally {
 
-
+        setLoading(false);
       }
     }
     tryFetch();
@@ -43,7 +43,8 @@ function Dashboard() {
     if (newProject.trim() !== "") {
 
       try {
-        const token = localStorage.getItem('token');
+
+        const token = tokenVerify();
 
         const Data = await projectAdd(token, newProject);
         setProjects((old) => [...old, Data]);
@@ -51,8 +52,7 @@ function Dashboard() {
 
       } catch (error) {
         console.error(error);
-        localStorage.removeItem('token');
-        navigator("/");
+        authError();
 
 
       }
@@ -61,12 +61,7 @@ function Dashboard() {
   const tryDelete = async (id: number): Promise<void> => {
     try {
 
-      const token = localStorage.getItem('token');
-      if (!token) {
-        navigator("/");
-        return;
-
-      }
+      const token = tokenVerify();
 
       const Data = await projectDelete(id, token);
       console.log(Data);
@@ -76,10 +71,9 @@ function Dashboard() {
       setProjects((old) => (old.filter((element) => (element.id !== id))))
 
     } catch (error) {
-
       console.error(error);
-      localStorage.removeItem('token');
-      navigator("/");
+
+      authError();
     }
 
   }
@@ -92,11 +86,8 @@ function Dashboard() {
 
     try {
 
-      const token = localStorage.getItem('token');
-      if (!token) {
-        navigator("/");
-        return;
-      }
+      const token = tokenVerify();
+
 
       const Data = await projectEdit(token, editingProjectId, editedName);
       setProjects((old) => old.map((element) => {
@@ -109,21 +100,26 @@ function Dashboard() {
       setEditingProjectId(null);
     } catch (error) {
       console.error(error);
-      localStorage.removeItem('token');
-      navigator("/");
+      authError();
 
     }
   }
 
-  const logout = () => {
-    localStorage.removeItem('token');
-    navigator("/");
-
+  if (loading) {
+    return (
+      <h1>Loading ...</h1>
+    )
   }
-
 
   return (
     <div>
+      {(projects.length === 0) &&
+        <div className="m-5">
+
+          <h1 >No Projects Created.</h1>
+          <h1>Add a new project to view.</h1>
+        </div>
+      }
       {projects.map((element) => (
         <div className="flex">
           {(element.id !== editingProjectId) &&
@@ -137,7 +133,7 @@ function Dashboard() {
 
           {(element.id === editingProjectId) &&
             <div>
-              <input value={editedName} onChange={(e) => setEditedName(e.target.value)} className="p-2 border-2 m-4 rounded-lg max-w-xs" />
+              <input value={editedName} onChange={(e) => setEditedName(e.target.value)} className="p-2 border-2 m-4 rounded-lg max-w-xs" /> <br />
               <button className="p-2 bg-rose-300 border-2 m-4 rounded-lg max-w-xs" onClick={() => saveEditProject()}>Save</button>
             </div>
           }
@@ -153,7 +149,7 @@ function Dashboard() {
 
       </div>
       <div>
-        <button onClick={logout} className="p-2 bg-emerald-300 border-2 m-4 rounded-lg max-w-xs" >Log Out</button>
+        <button onClick={logout} className="p-2 bg-lime-300 border-2 m-4 rounded-lg max-w-xs" >Log Out</button>
       </div>
     </div >
   )

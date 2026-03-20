@@ -1,4 +1,5 @@
 import type { AuthResponse, LoginRequest } from "../types";
+
 export async function AttemptLogin(credentials: LoginRequest): Promise<AuthResponse> {
 
   try {
@@ -20,3 +21,4 @@ export async function AttemptLogin(credentials: LoginRequest): Promise<AuthRespo
     throw err;
   }
 }
+

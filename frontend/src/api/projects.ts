@@ -59,7 +59,7 @@ export async function projectDelete(id: number, token: string) {
 }
 
 
-export async function projectEdit(token: string, editingProjectId: number, editedName: string) {
+export async function projectEdit(token: string, editingProjectId: number | null, editedName: string) {
   const response = await fetch(`http://localhost:3000/projects/${editingProjectId}`, {
     method: "PUT",
     headers: {
