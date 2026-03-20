@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import type { Project } from "../types"
+import { projectAdd, projectDelete, projectEdit, projectFetch } from "../api/projects";
 function Dashboard() {
+  const [editingProjectId, setEditingProjectId] = useState<number | null>(null)
+  const [editedName, setEditedName] = useState<string>("");
+  const navigator = useNavigate();
 
   console.log("Dashboard Opened");
 
@@ -10,61 +15,147 @@ function Dashboard() {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    async function projectFetch() {
-      const response = await fetch('http://localhost:3000/projects', {
-        method: "GET",
-        headers: {
-          "Authorization": token,
-          "Content-Type": "application/json"
-        }
-
-      });
-      const Data = await response.json();
-      setProjects(Data);
-      console.log(Data);
-
+    if (!token) {
+      navigator("/");
+      return;
     }
-    projectFetch();
+    const tryFetch = async () => {
+      try {
+
+        const Data = await projectFetch(token);
+        setProjects(Data);
+      }
+
+      catch (error) {
+        console.error(error);
+
+        localStorage.removeItem('token');
+        navigator("/");
+        return;
+
+
+      }
+    }
+    tryFetch();
   }, [])
 
-  const handleAddProject = async () => {
+  const tryAdd = async () => {
     if (newProject.trim() !== "") {
+
+      try {
+        const token = localStorage.getItem('token');
+
+        const Data = await projectAdd(token, newProject);
+        setProjects((old) => [...old, Data]);
+        setNewProject("");
+
+      } catch (error) {
+        console.error(error);
+        localStorage.removeItem('token');
+        navigator("/");
+
+
+      }
+    }
+  }
+  const tryDelete = async (id: number): Promise<void> => {
+    try {
+
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3000/projects', {
-        method: "POST",
-        headers: {
-          "Authorization": token,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          name: newProject
-        })
-      })
-      const Data = await response.json();
+      if (!token) {
+        navigator("/");
+        return;
+
+      }
+
+      const Data = await projectDelete(id, token);
       console.log(Data);
-      setProjects((old) => [...old, Data]);
-      setNewProject("");
 
 
 
+      setProjects((old) => (old.filter((element) => (element.id !== id))))
+
+    } catch (error) {
+
+      console.error(error);
+      localStorage.removeItem('token');
+      navigator("/");
+    }
+
+  }
+  const startEditProject = (id: number, name: string) => {
+    setEditingProjectId(id);
+    setEditedName(name);
+
+  }
+  const saveEditProject = async (): Promise<void> => {
+
+    try {
+
+      const token = localStorage.getItem('token');
+      if (!token) {
+        navigator("/");
+        return;
+      }
+
+      const Data = await projectEdit(token, editingProjectId, editedName);
+      setProjects((old) => old.map((element) => {
+        if (element.id === editingProjectId) {
+          return Data;
+        }
+        return element;
+      }))
+
+      setEditingProjectId(null);
+    } catch (error) {
+      console.error(error);
+      localStorage.removeItem('token');
+      navigator("/");
 
     }
   }
 
+  const logout = () => {
+    localStorage.removeItem('token');
+    navigator("/");
+
+  }
 
 
   return (
     <div>
       {projects.map((element) => (
-        <h3 className="border-2 p-2 m-4 rounded-md bg-teal-200" key={element.id}>{element.name}</h3>
-      ))}
+        <div className="flex">
+          {(element.id !== editingProjectId) &&
+
+            <div>
+
+              <h3 className="min-w-xs border-2 p-2 m-4 rounded-md bg-teal-200" key={element.id}>{element.name}</h3>
+              <button className="p-2 bg-rose-300 border-2 m-4 rounded-lg max-w-xs" onClick={() => startEditProject(element.id, element.name)}>Edit</button>
+            </div>
+          }
+
+          {(element.id === editingProjectId) &&
+            <div>
+              <input value={editedName} onChange={(e) => setEditedName(e.target.value)} className="p-2 border-2 m-4 rounded-lg max-w-xs" />
+              <button className="p-2 bg-rose-300 border-2 m-4 rounded-lg max-w-xs" onClick={() => saveEditProject()}>Save</button>
+            </div>
+          }
+          <button className="p-2 bg-rose-300 border-2 m-4 rounded-lg max-w-xs" onClick={() => tryDelete(element.id)}>Delete</button>
+
+        </div>
+      ))
+      }
 
       <div>
         <input value={newProject} onChange={(e) => setNewProject(e.target.value)} placeholder="Enter New Project Name" className="p-2 border-2 m-4 rounded-lg max-w-xs" />
-        <button onClick={handleAddProject} className="p-2 border-2 m-4 rounded-lg max-w-xs" >Add</button>
+        <button onClick={tryAdd} className="p-2 bg-emerald-300 border-2 m-4 rounded-lg max-w-xs" >Add</button>
 
       </div>
-    </div>
+      <div>
+        <button onClick={logout} className="p-2 bg-emerald-300 border-2 m-4 rounded-lg max-w-xs" >Log Out</button>
+      </div>
+    </div >
   )
 }
 
