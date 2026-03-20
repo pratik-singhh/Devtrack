@@ -2,11 +2,10 @@ import { useState, useEffect } from "react";
 import type { Project } from "../types"
 import { projectAdd, projectDelete, projectEdit, projectFetch } from "../api/projects";
 import { useAuth } from "../hooks/useAuth";
+import ProjectItem from "../components/ProjectItem";
 
 function Dashboard() {
   const { authError, tokenVerify, logout } = useAuth();
-  const [editingProjectId, setEditingProjectId] = useState<number | null>(null)
-  const [editedName, setEditedName] = useState<string>("");
   console.log("Dashboard Opened");
 
   const [projects, setProjects] = useState<Project[]>([]);
@@ -77,34 +76,32 @@ function Dashboard() {
     }
 
   }
-  const startEditProject = (id: number, name: string) => {
-    setEditingProjectId(id);
-    setEditedName(name);
 
-  }
-  const saveEditProject = async (): Promise<void> => {
-
+  const tryEdit = async (id: number, newName: string) => {
     try {
 
       const token = tokenVerify();
 
+      const data = await projectEdit(token, id, newName);
+      console.log(data);
 
-      const Data = await projectEdit(token, editingProjectId, editedName);
-      setProjects((old) => old.map((element) => {
-        if (element.id === editingProjectId) {
-          return Data;
+      const editedProject = projects.map((item) => {
+        if (item.id === id) {
+          return data;
         }
-        return element;
-      }))
+        else return item;
+      })
+      setProjects(editedProject);
 
-      setEditingProjectId(null);
+
     } catch (error) {
       console.error(error);
       authError();
 
-    }
-  }
 
+    }
+
+  }
   if (loading) {
     return (
       <h1>Loading ...</h1>
@@ -120,28 +117,16 @@ function Dashboard() {
           <h1>Add a new project to view.</h1>
         </div>
       }
-      {projects.map((element) => (
-        <div className="flex">
-          {(element.id !== editingProjectId) &&
 
-            <div>
+      {projects.map((item) => (
+        <ProjectItem
+          details={item}
+          tryDelete={tryDelete}
+          tryEdit={tryEdit}
+          key={item.id}
+        />
 
-              <h3 className="min-w-xs border-2 p-2 m-4 rounded-md bg-teal-200" key={element.id}>{element.name}</h3>
-              <button className="p-2 bg-rose-300 border-2 m-4 rounded-lg max-w-xs" onClick={() => startEditProject(element.id, element.name)}>Edit</button>
-            </div>
-          }
-
-          {(element.id === editingProjectId) &&
-            <div>
-              <input value={editedName} onChange={(e) => setEditedName(e.target.value)} className="p-2 border-2 m-4 rounded-lg max-w-xs" /> <br />
-              <button className="p-2 bg-rose-300 border-2 m-4 rounded-lg max-w-xs" onClick={() => saveEditProject()}>Save</button>
-            </div>
-          }
-          <button className="p-2 bg-rose-300 border-2 m-4 rounded-lg max-w-xs" onClick={() => tryDelete(element.id)}>Delete</button>
-
-        </div>
-      ))
-      }
+      ))}
 
       <div>
         <input value={newProject} onChange={(e) => setNewProject(e.target.value)} placeholder="Enter New Project Name" className="p-2 border-2 m-4 rounded-lg max-w-xs" />
