@@ -29,7 +29,10 @@ function ProjectItem(props: Props) {
       {(isEditing) &&
         <div>
           <input value={editedName} onChange={(e) => setEditedName(e.target.value)} className="p-2 border-2 m-4 rounded-lg max-w-xs" /> <br />
-          <button className="p-2 bg-rose-300 border-2 m-4 rounded-lg max-w-xs" onClick={() => setIsEditing(false)} >Save</button>
+          <button className="p-2 bg-rose-300 border-2 m-4 rounded-lg max-w-xs" onClick={() => {
+            tryEdit(details.id, editedName)
+            setIsEditing(false);
+          }} >Save</button>
           <button className="p-2 bg-rose-300 border-2 m-4 rounded-lg max-w-xs" onClick={() => tryDelete(details.id)}>Delete</button>
         </div>
       }
