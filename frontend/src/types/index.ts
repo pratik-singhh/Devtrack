@@ -12,3 +12,11 @@ export type LoginRequest = {
   email: string;
   password: string;
 }
+
+export type Task = {
+  id: number
+  name: string
+  project_id: number
+  completed: boolean
+  created_at: string
+}

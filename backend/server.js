@@ -189,6 +189,25 @@ app.delete('/projects/:id', authMiddleware, async (req, res) => {
   }
 })
 
+app.delete('/tasks/:id', authMiddleware, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userID = req.user.userID;
+    const check = await pool.query('SELECT tasks.id FROM tasks JOIN projects ON projects.id=tasks.project_id WHERE projects.user_id=$1 AND tasks.id=$2', [userID, id]);
+    if (check.rows.length === 0) {
+      return res.status(403).json({ error: "Not Authorized" });
+    }
+    const result = await pool.query('DELETE FROM tasks WHERE id=$1 RETURNING *', [id]);
+
+    res.status(200).json(result.rows[0]);
+
+
+  } catch (error) {
+    return res.status(500).json({ error: "Server Error" });
+
+  }
+})
+
 
 
 app.post('/auth/signup', async (req, res) => {
