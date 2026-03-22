@@ -2,7 +2,7 @@ const tryFetchTasks = async (id: number, token: string) => {
   const response = await fetch(`https://devtrack-production.up.railway.app/projects/${id}/tasks`, {
     method: "GET",
     headers: {
-      "Authorization": token,
+      "Authorization": `Bearer ${token}`,
       "Content-Type": "application/json"
     }
   });
@@ -22,7 +22,7 @@ const tryUpdateTasks = async (id: number, completed: boolean, token: string) => 
     method: "PUT",
     headers: {
 
-      "Authorization": token,
+      "Authorization": `Bearer ${token}`,
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
@@ -44,7 +44,7 @@ const tryDeleteTasks = async (id: number, token: string) => {
     method: "DELETE",
     headers: {
 
-      "Authorization": token,
+      "Authorization": `Bearer ${token}`,
       "Content-Type": "application/json"
     },
   });
@@ -63,7 +63,7 @@ const tryAddTasks = async (id: number, name: string, token: string) => {
     method: "POST",
     headers: {
 
-      "Authorization": token,
+      "Authorization": `Bearer ${token}`,
       "Content-Type": "application/json"
     },
     body: JSON.stringify({

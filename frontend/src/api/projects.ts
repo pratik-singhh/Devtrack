@@ -2,7 +2,7 @@ export async function projectFetch(token: string) {
   const response = await fetch('https://devtrack-production.up.railway.app/projects', {
     method: "GET",
     headers: {
-      "Authorization": token,
+      "Authorization": `Bearer ${token}`,
       "Content-Type": "application/json"
     }
 
@@ -21,7 +21,7 @@ export async function projectAdd(token: string, newProject: string) {
   const response = await fetch('https://devtrack-production.up.railway.app/projects', {
     method: "POST",
     headers: {
-      "Authorization": token,
+      "Authorization": `Bearer ${token}`,
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
@@ -46,7 +46,7 @@ export async function projectDelete(id: number, token: string) {
   const response = await fetch(`https://devtrack-production.up.railway.app/projects/${id}`, {
     method: "DELETE",
     headers: {
-      "Authorization": token,
+      "Authorization": `Bearer ${token}`,
 
     }
   })
@@ -63,7 +63,7 @@ export async function projectEdit(token: string, editingProjectId: number | null
   const response = await fetch(`https://devtrack-production.up.railway.app/projects/${editingProjectId}`, {
     method: "PUT",
     headers: {
-      "Authorization": token,
+      "Authorization": `Bearer ${token}`,
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
