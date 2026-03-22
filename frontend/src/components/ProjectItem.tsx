@@ -72,6 +72,7 @@ function ProjectItem(props: Props) {
 
       setTasks((old) => [...old, data]);
 
+      setNewTask("");
 
     } catch (error) {
 
@@ -105,16 +106,16 @@ function ProjectItem(props: Props) {
     }
     fetchTasks();
 
-  }, [])
+  }, [details.id])
 
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col bg-green-500 m-5 rounded-lg border-2 p-1 max-h-fit">
       {(!isEditing) &&
 
-        <div>
+        <div className="flex">
 
-          <h3 className="min-w-xs border-2 p-2 m-4 rounded-md bg-teal-200" key={details.id}>{details.name}</h3>
+          <h3 className="max-w-xs min-w-xs border-2 p-2 m-4 rounded-md bg-teal-200" key={details.id}>{details.name}</h3>
           <button className="p-2 bg-rose-300 border-2 m-4 rounded-lg max-w-xs" onClick={() => {
             setEditedName(details.name);
             setIsEditing(true);
@@ -125,8 +126,8 @@ function ProjectItem(props: Props) {
       }
 
       {(isEditing) &&
-        <div>
-          <input value={editedName} onChange={(e) => setEditedName(e.target.value)} className="p-2 border-2 m-4 rounded-lg max-w-xs" /> <br />
+        <div className="flex">
+          <input value={editedName} onChange={(e) => setEditedName(e.target.value)} className="bg-white p-2 border-2 m-4 rounded-lg max-w-xs" /> <br />
           <button className="p-2 bg-rose-300 border-2 m-4 rounded-lg max-w-xs" onClick={() => {
             tryEdit(details.id, editedName)
             setIsEditing(false);
@@ -134,24 +135,23 @@ function ProjectItem(props: Props) {
           <button className="p-2 bg-rose-300 border-2 m-4 rounded-lg max-w-xs" onClick={() => tryDelete(details.id)}>Delete</button>
         </div>
       }
-      <div className="flex max-h-fit">
+      <div className="flex max-h-fit flex-col">
         {tasks.map((item) => (
           <div className="flex" key={item.id}>
 
-            <p className="m-5 border-2 p-2 max-w-xs">{item.name}</p>
+            <p className="m-5 border-2 p-2 min-w-xs bg-yellow-200 rounded-md max-w-xs">{item.name}</p>
 
-            <input onChange={(e) => { changeComplete(item.id, e.target.checked) }} checked={item.completed} className="m-2 p-2 border-3" type="checkbox" />
-            <button className="border-2 rounded-lg bg-red-300 max-w-xs" onClick={() => deleteTask(item.id)}>Delete</button>
+            <input onChange={(e) => { changeComplete(item.id, e.target.checked) }} checked={item.completed} className="m-2 scale-200 p-2 border-3" type="checkbox" />
+            <button className="border-2 rounded-lg bg-red-300 m-4 p-1 " onClick={() => deleteTask(item.id)}>Delete</button>
           </div>
         ))}
         <div>
-          <input onChange={(e) => setNewTask(e.target.value)} value={newTask} className="border-2 m-5 " />
+          <input onChange={(e) => setNewTask(e.target.value)} value={newTask} className="border-2 bg-white m-5 p-2 " />
           <button onClick={() => {
             addTask(details.id);
-            setNewTask("");
 
           }
-          } className="border-2 m-5 p-1" >Add Task</button>
+          } className="border-2 m-5 p-1 bg-rose-400" >Add Task</button>
         </div>
 
       </div>
