@@ -1,3 +1,4 @@
+require('dotenv').config();
 const cors = require('cors');
 const express = require('express');
 const pool = require('./db.js');
@@ -16,7 +17,7 @@ function authMiddleware(req, res, next) {
 
       return res.status(401).json({ error: "Token Not Provided" });
     }
-    const verified = jwt.verify(token, "secretkey");
+    const verified = jwt.verify(token, process.env.JWT_SECRET);
     req.user = verified;
     next();
 
@@ -247,7 +248,7 @@ app.post('/auth/login', async (req, res) => {
 
     const isMatch = await bcrypt.compare(password, foundUser.password);
     if (isMatch) {
-      const token = jwt.sign({ userID: foundUser.id }, "secretkey");
+      const token = jwt.sign({ userID: foundUser.id }, process.env.JWT_SECRET);
       console.log("Login Accepted")
       res.status(200).json({ token });
     }
@@ -267,7 +268,7 @@ app.post('/auth/login', async (req, res) => {
 
 
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Sever is running on ${PORT}`);
 });
