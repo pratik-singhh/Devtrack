@@ -1,5 +1,5 @@
 const tryFetchTasks = async (id: number, token: string) => {
-  const response = await fetch(`http://devtrack-production.up.railway.app/projects/${id}/tasks`, {
+  const response = await fetch(`https://devtrack-production.up.railway.app/projects/${id}/tasks`, {
     method: "GET",
     headers: {
       "Authorization": token,
@@ -18,7 +18,7 @@ const tryFetchTasks = async (id: number, token: string) => {
 
 }
 const tryUpdateTasks = async (id: number, completed: boolean, token: string) => {
-  const response = await fetch(`http://devtrack-production.up.railway.app/tasks/${id}`, {
+  const response = await fetch(`https://devtrack-production.up.railway.app/tasks/${id}`, {
     method: "PUT",
     headers: {
 
@@ -40,7 +40,7 @@ const tryUpdateTasks = async (id: number, completed: boolean, token: string) => 
 }
 
 const tryDeleteTasks = async (id: number, token: string) => {
-  const response = await fetch(`http://devtrack-production.up.railway.app/tasks/${id}`, {
+  const response = await fetch(`https://devtrack-production.up.railway.app/tasks/${id}`, {
     method: "DELETE",
     headers: {
 
@@ -59,7 +59,7 @@ const tryDeleteTasks = async (id: number, token: string) => {
 }
 
 const tryAddTasks = async (id: number, name: string, token: string) => {
-  const response = await fetch(`http://devtrack-production.up.railway.app/projects/${id}/tasks`, {
+  const response = await fetch(`https://devtrack-production.up.railway.app/projects/${id}/tasks`, {
     method: "POST",
     headers: {
 
