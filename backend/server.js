@@ -12,11 +12,12 @@ app.use(cors());
 
 function authMiddleware(req, res, next) {
   try {
-    const token = req.headers.authorization;
-    if (!token) {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
 
       return res.status(401).json({ error: "Token Not Provided" });
     }
+    const token = authHeader.split(' ')[1] || authHeader;
     const verified = jwt.verify(token, process.env.JWT_SECRET);
     req.user = verified;
     next();
