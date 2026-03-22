@@ -43,7 +43,7 @@ function Login() {
 
       <div className="gap-4 flex  flex-col justify-center items-center min-h-screen">
 
-        <input value={credentials.email} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCredentials((prev) => ({ ...prev, email: (e.target.value) }))} placeholder="Enter Email" className="p-2 border-2 m-4 rounded-lg max-w-xs" />
+        <input value={credentials.email} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCredentials((prev) => ({ ...prev, email: (e.target.value) }))} placeholder="Enter Username" className="p-2 border-2 m-4 rounded-lg max-w-xs" />
         <input value={credentials.password} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCredentials((prev) => ({ ...prev, password: (e.target.value) }))} type="password" placeholder="Enter Password" className="p-2 border-2 m-4 rounded-lg max-w-xs" />
         {(error) &&
 
