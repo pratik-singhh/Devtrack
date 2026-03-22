@@ -87,7 +87,7 @@ function ProjectItem(props: Props) {
   const [editedName, setEditedName] = useState<string>("");
   const [tasks, setTasks] = useState<Task[]>([])
   const [newTask, setNewTask] = useState<string>("");
-  const { authError, tokenVerify, logout } = useAuth();
+  const { tokenVerify } = useAuth();
 
   useEffect(() => {
     async function fetchTasks() {

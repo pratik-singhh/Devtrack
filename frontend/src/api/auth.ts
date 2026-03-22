@@ -3,7 +3,7 @@ import type { AuthResponse, LoginRequest } from "../types";
 export async function AttemptLogin(credentials: LoginRequest): Promise<AuthResponse> {
 
   try {
-    const response = await fetch('http://localhost:3000/auth/login', {
+    const response = await fetch('http://devtrack-production.up.railway.app/auth/login', {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(credentials),

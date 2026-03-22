@@ -1,5 +1,5 @@
 export async function projectFetch(token: string) {
-  const response = await fetch('http://localhost:3000/projects', {
+  const response = await fetch('http://devtrack-production.up.railway.app/projects', {
     method: "GET",
     headers: {
       "Authorization": token,
@@ -18,7 +18,7 @@ export async function projectFetch(token: string) {
 
 
 export async function projectAdd(token: string, newProject: string) {
-  const response = await fetch('http://localhost:3000/projects', {
+  const response = await fetch('http://devtrack-production.up.railway.app/projects', {
     method: "POST",
     headers: {
       "Authorization": token,
@@ -43,7 +43,7 @@ export async function projectAdd(token: string, newProject: string) {
 
 
 export async function projectDelete(id: number, token: string) {
-  const response = await fetch(`http://localhost:3000/projects/${id}`, {
+  const response = await fetch(`http://devtrack-production.up.railway.app/projects/${id}`, {
     method: "DELETE",
     headers: {
       "Authorization": token,
@@ -60,7 +60,7 @@ export async function projectDelete(id: number, token: string) {
 
 
 export async function projectEdit(token: string, editingProjectId: number | null, editedName: string) {
-  const response = await fetch(`http://localhost:3000/projects/${editingProjectId}`, {
+  const response = await fetch(`http://devtrack-production.up.railway.app/projects/${editingProjectId}`, {
     method: "PUT",
     headers: {
       "Authorization": token,

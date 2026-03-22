@@ -1,6 +1,4 @@
-import { useState, useEffect } from "react";
-import type { Project } from "../types"
-import { projectAdd, projectDelete, projectEdit, projectFetch } from "../api/projects";
+import { useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import ProjectItem from "../components/ProjectItem";
 import { useProjects } from "../hooks/useProjects";
