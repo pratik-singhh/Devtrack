@@ -11,7 +11,6 @@ app.use(express.json());
 app.use(cors({
   origin: "*",
 }));
-app.options('*', cors());
 
 function authMiddleware(req, res, next) {
   try {
