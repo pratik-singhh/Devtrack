@@ -1,5 +1,5 @@
 export async function projectFetch(token: string) {
-  const response = await fetch('https://devtrack-production.up.railway.app/projects', {
+  const response = await fetch('https://devtrack-4nz7.onrender.com/projects', {
     method: "GET",
     headers: {
       "Authorization": `Bearer ${token}`,
@@ -18,7 +18,7 @@ export async function projectFetch(token: string) {
 
 
 export async function projectAdd(token: string, newProject: string) {
-  const response = await fetch('https://devtrack-production.up.railway.app/projects', {
+  const response = await fetch('https://devtrack-4nz7.onrender.com/projects', {
     method: "POST",
     headers: {
       "Authorization": `Bearer ${token}`,
@@ -43,7 +43,7 @@ export async function projectAdd(token: string, newProject: string) {
 
 
 export async function projectDelete(id: number, token: string) {
-  const response = await fetch(`https://devtrack-production.up.railway.app/projects/${id}`, {
+  const response = await fetch(`https://devtrack-4nz7.onrender.com/projects/${id}`, {
     method: "DELETE",
     headers: {
       "Authorization": `Bearer ${token}`,
@@ -60,7 +60,7 @@ export async function projectDelete(id: number, token: string) {
 
 
 export async function projectEdit(token: string, editingProjectId: number | null, editedName: string) {
-  const response = await fetch(`https://devtrack-production.up.railway.app/projects/${editingProjectId}`, {
+  const response = await fetch(`https://devtrack-4nz7.onrender.com/projects/${editingProjectId}`, {
     method: "PUT",
     headers: {
       "Authorization": `Bearer ${token}`,

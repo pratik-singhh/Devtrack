@@ -145,32 +145,36 @@ app.put('/projects/:id', authMiddleware, async (req, res) => {
   }
   catch (err) {
     console.error(err.message);
-    res.status(500).json("Server Error");
+    res.status(500).json({ error: "Server Error" });
 
 
   }
 })
 
 app.put('/tasks/:id', authMiddleware, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, completed } = req.body;
+    const userID = req.user.userID;
 
-  const { id } = req.params;
-  const { name, completed } = req.body;
-  const userID = req.user.userID;
+    const check = await pool.query(
+      'SELECT tasks.id FROM tasks JOIN projects ON tasks.project_id=projects.id WHERE tasks.id=$1 AND projects.user_id=$2;',
+      [id, userID]
+    )
+    if (check.rows.length !== 0) {
 
-  const check = await pool.query(
-    'SELECT tasks.id FROM tasks JOIN projects ON tasks.project_id=projects.id WHERE tasks.id=$1 AND projects.user_id=$2;',
-    [id, userID]
-  )
-  if (check.rows.length !== 0) {
+      const result = await pool.query('UPDATE tasks SET name = COALESCE($1,name), completed=COALESCE($2,completed) WHERE id=$3 RETURNING *', [name, completed, id])
 
-    const result = await pool.query('UPDATE tasks SET name = COALESCE($1,name), completed=COALESCE($2,completed) WHERE id=$3 RETURNING *', [name, completed, id])
+      return res.status(200).json(result.rows[0]);
+    }
+    else {
+      return res.status(403).json({ error: "Forbidden Access" });
+    }
 
-    return res.status(200).json(result.rows[0]);
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).json({ error: "Server Error" });
   }
-  else {
-    return res.status(403).json({ error: "Forbidden Access" });
-  }
-
 })
 
 
