@@ -110,53 +110,105 @@ function ProjectItem(props: Props) {
 
 
   return (
-    <div className="flex flex-col bg-green-500 m-5 rounded-lg border-2 p-1 max-h-fit">
-      {(!isEditing) &&
+    <div className="paper-container p-6 relative flex flex-col min-h-[300px]">
+      {/* Decorative vertical line */}
+      <div className="absolute top-0 left-4 w-px h-full bg-ink-color/10"></div>
+      
+      <div className="pl-6">
+        <div className="flex justify-between items-start mb-6">
+          {!isEditing ? (
+            <div className="flex-1">
+              <h3 className="text-xl mb-1">{details.name}</h3>
+              <p className="text-[10px] opacity-40 uppercase">Project No. {details.id}</p>
+            </div>
+          ) : (
+            <div className="flex-1 mr-4">
+              <input 
+                value={editedName} 
+                onChange={(e) => setEditedName(e.target.value)} 
+                className="input-typewriter w-full" 
+                autoFocus
+              />
+            </div>
+          )}
 
-        <div className="flex">
-
-          <h3 className="max-w-xs min-w-xs border-2 p-2 m-4 rounded-md bg-teal-200" key={details.id}>{details.name}</h3>
-          <button className="p-2 bg-rose-300 border-2 m-4 rounded-lg max-w-xs" onClick={() => {
-            setEditedName(details.name);
-            setIsEditing(true);
-
-          }}>Edit</button>
-          <button className="p-2 bg-rose-300 border-2 m-4 rounded-lg max-w-xs" onClick={() => tryDelete(details.id)}>Delete</button>
-        </div>
-      }
-
-      {(isEditing) &&
-        <div className="flex">
-          <input value={editedName} onChange={(e) => setEditedName(e.target.value)} className="bg-white p-2 border-2 m-4 rounded-lg max-w-xs" /> <br />
-          <button className="p-2 bg-rose-300 border-2 m-4 rounded-lg max-w-xs" onClick={() => {
-            tryEdit(details.id, editedName)
-            setIsEditing(false);
-          }} >Save</button>
-          <button className="p-2 bg-rose-300 border-2 m-4 rounded-lg max-w-xs" onClick={() => tryDelete(details.id)}>Delete</button>
-        </div>
-      }
-      <div className="flex max-h-fit flex-col">
-        {tasks.map((item) => (
-          <div className="flex" key={item.id}>
-
-            <p className="m-5 border-2 p-2 min-w-xs bg-yellow-200 rounded-md max-w-xs">{item.name}</p>
-
-            <input onChange={(e) => { changeComplete(item.id, e.target.checked) }} checked={item.completed} className="m-2 scale-200 p-2 border-3" type="checkbox" />
-            <button className="border-2 rounded-lg bg-red-300 m-4 p-1 " onClick={() => deleteTask(item.id)}>Delete</button>
+          <div className="flex gap-2">
+            {!isEditing ? (
+              <button 
+                className="text-[10px] uppercase border border-ink-color/30 px-2 py-1 hover:bg-ink-color hover:text-paper-bg transition-colors"
+                onClick={() => {
+                  setEditedName(details.name);
+                  setIsEditing(true);
+                }}
+              >
+                Edit
+              </button>
+            ) : (
+              <button 
+                className="text-[10px] uppercase border border-ink-color/30 px-2 py-1 hover:bg-green-800 hover:text-white transition-colors"
+                onClick={() => {
+                  tryEdit(details.id, editedName)
+                  setIsEditing(false);
+                }}
+              >
+                Save
+              </button>
+            )}
+            <button 
+              className="text-[10px] uppercase border border-red-800/30 text-red-800/60 px-2 py-1 hover:bg-red-800 hover:text-white transition-colors"
+              onClick={() => tryDelete(details.id)}
+            >
+              Delete
+            </button>
           </div>
-        ))}
-        <div>
-          <input onChange={(e) => setNewTask(e.target.value)} value={newTask} className="border-2 bg-white m-5 p-2 " />
-          <button onClick={() => {
-            addTask(details.id);
-
-          }
-          } className="border-2 m-5 p-1 bg-rose-400" >Add Task</button>
         </div>
 
-      </div>
+        <div className="space-y-4 flex-1">
+          <div className="border-t border-ink-color/10 pt-4">
+            <p className="text-[10px] uppercase font-bold mb-4 opacity-50 tracking-widest">Tasks to do</p>
+            
+            <div className="space-y-2">
+              {tasks.map((item) => (
+                <div className="flex items-center group" key={item.id}>
+                  <input 
+                    type="checkbox"
+                    onChange={(e) => { changeComplete(item.id, e.target.checked) }} 
+                    checked={item.completed} 
+                    className="appearance-none w-4 h-4 border border-ink-color relative cursor-pointer checked:bg-ink-color checked:after:content-['✓'] checked:after:absolute checked:after:inset-0 checked:after:flex checked:after:items-center checked:after:justify-center checked:after:text-[10px] checked:after:text-paper-bg" 
+                  />
+                  <p className={`ml-3 text-sm flex-1 ${item.completed ? 'line-through opacity-40' : ''}`}>
+                    {item.name}
+                  </p>
+                  <button 
+                    className="opacity-0 group-hover:opacity-100 text-[8px] uppercase text-red-800/60 ml-2"
+                    onClick={() => deleteTask(item.id)}
+                  >
+                    [ Remove ]
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
 
-    </div >
+        <div className="mt-8 pt-4 border-t border-dashed border-ink-color/20">
+          <div className="flex gap-2 items-center">
+            <input 
+              onChange={(e) => setNewTask(e.target.value)} 
+              value={newTask} 
+              placeholder="New entry..."
+              className="bg-transparent border-b border-ink-color/20 text-xs py-1 flex-1 focus:outline-none focus:border-ink-color" 
+            />
+            <button 
+              onClick={() => addTask(details.id)} 
+              className="text-[10px] uppercase font-bold opacity-60 hover:opacity-100"
+            >
+              + Add
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
 

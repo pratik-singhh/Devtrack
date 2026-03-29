@@ -1,83 +1,102 @@
-# 🧠 DevTrack — Fullstack Task Manager
+# 📄 TaskMaster — Fullstack "Old Paper" Task Manager
 
-A fullstack task management app with authentication, project organization, and task tracking.  
-Built to simulate real-world workflows with secure user-based access and deployed infrastructure.
+> A high-performance, fullstack task management application with a unique "Vintage Document" aesthetic.
+
+![Old Paper Theme Preview](https://raw.githubusercontent.com/pratik-singhh/Devtrack/main/frontend/src/assets/paper_texture.png)
+
+## ✨ The Vision
+**TaskMaster** is not just another To-Do list. It's a digital workspace designed to feel like a physical filing cabinet. Inspired by vintage bureaucratic documents and classic typewriters, it provides a focused, distraction-free environment for organizing your life.
 
 ---
 
 ## 🌐 Live Demo
 
-- **Frontend:** https://taskmaster-rho-two.vercel.app/
-- **Backend API:** https://devtrack-production.up.railway.app  
+- **Frontend:** [taskmaster-rho-two.vercel.app](https://taskmaster-rho-two.vercel.app/)
 
 ---
 
-## 🚀 Features
+## 🎨 Design Philosophy: "Old Paper"
+TaskMaster moves away from modern neon/glassmorphism trends to embrace a **Vintage Document** look:
+- **Paper Palette**: Warm cream/sepia background (`#F4EBD0`) with rich ink-black text.
+- **Typography**: Uses **Courier Prime** for an authentic typewriter feel.
+- **Parchment UI**: Every project is a "Record," and every task is a "Sub-Record" stamped into the history.
+- **Zero Distractions**: No complex animations, just the sound of (imaginary) ink on paper.
 
-- 🔐 **Authentication (JWT)**
-  - User signup & login
-  - Secure token-based access
+---
 
-- 📁 **Project Management**
-  - Create, edit, delete projects
-  - Each user has isolated data
+## 🚀 Core Features
 
-- ✅ **Task Management**
-  - Add tasks to projects
-  - Toggle completion
-  - Update task details
-  - Delete tasks
+- 🔐 **Secure Access (JWT)**
+  - Full authentication flow (Signup/Login).
+  - Encrypted passwords using `bcrypt`.
+  - Token-based persistent sessions.
 
-- 🔒 **Authorization**
-  - Users can only access their own projects & tasks
-  - Protected backend routes
+- 📁 **Filing Cabinet (Projects)**
+  - Group related tasks into isolated "Project Records."
+  - Complete CRUD operations (Create, Edit, Delete).
+  - Infinite scrollable list of historical records.
 
-- ⚡ **Real-time UI Updates**
-  - Optimistic updates for better UX
-  - Instant feedback on actions
+- ✅ **Ledger Management (Tasks)**
+  - Add specific tasks to any project.
+  - Interactive "Ink-stamped" checkboxes.
+  - Real-time UI updates (Optimistic UI).
+
+- 🔒 **Data Privacy**
+  - Strict user-based isolation.
+  - You only see your own records; they are strictly confidential.
 
 ---
 
 ## 🧱 Tech Stack
 
-### Frontend
-- React
-- TypeScript
-- Tailwind CSS
-- Vite
+| Layer | Technology |
+|---|---|
+| **Frontend** | React, TypeScript, Tailwind CSS, Vite |
+| **Backend** | Node.js, Express |
+| **Database** | PostgreSQL (Neon) |
+| **Styling** | Custom CSS (Paper Design System) |
+| **Hosting** | Vercel (Frontend), Railway (Backend) |
 
-### Backend
-- Node.js
-- Express
-- PostgreSQL
+---
 
-### Auth
-- JSON Web Tokens (JWT)
-- bcrypt
+## 🛠️ Local Installation
 
-### Deployment
-- Frontend: Vercel
-- Backend: Railway
-- Database: Neon (PostgreSQL)
+### 1. Clone the Repository
+```bash
+git clone https://github.com/pratik-singhh/Devtrack.git
+cd Devtrack
+```
+
+### 2. Frontend Setup
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+### 3. Backend Setup
+```bash
+cd backend
+npm install
+# Create a .env file with:
+# DATABASE_URL=your_postgres_url
+# JWT_SECRET=your_secret
+node server.js
+```
 
 ---
 
 ## 🗄️ Database Schema
+The system operates on a relational model optimized for speed:
+- **Users**: Identity records.
+- **Projects**: Group containers owned by users.
+- **Tasks**: Individual units of work linked to projects.
 
-```sql
-users
-- id
-- email
-- password
+---
 
-projects
-- id
-- name
-- user_id
+## 📜 License
+This project is licensed under the **MIT License**.
 
-tasks
-- id
-- name
-- project_id
-- completed
-- created_at
+---
+
+*Hand-crafted with ❤️ by [Pratik Singh](https://github.com/pratik-singhh)*
